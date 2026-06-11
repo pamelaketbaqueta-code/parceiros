@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portal do Parceiro · Metrocasa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --red:#E30613; --red-deep:#C00510; --red-dark:#B00510; --red-tint:#FCE7E8; --red-soft:#FDF1F1;
+  --green:#2D8C3C; --green-deep:#247332; --green-text:#1E6B2C; --green-tint:#E6F3E8;
+  --yellow:#F5C800; --yellow-tint:#FBF0C4; --yellow-text:#5A4700;
+  --ink:#1B1B1A; --muted:#6E6B66; --faint:#A3A09A;
+  --paper:#F6F4EF; --card:#FFFFFF; --line:#E9E6DF; --line-soft:#F1EFE9;
+  --sh-sm:0 1px 2px rgba(27,27,26,.05),0 1px 1px rgba(27,27,26,.03);
+  --sh-md:0 2px 6px rgba(27,27,26,.06),0 8px 24px rgba(27,27,26,.07);
+  --sh-lg:0 24px 70px rgba(27,27,26,.16),0 6px 18px rgba(27,27,26,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--paper);color:var(--ink);font-size:14px;line-height:1.5;
+  background-image:repeating-linear-gradient(114deg,rgba(45,140,60,.025) 0 2px,transparent 2px 130px)}
+h1,h2,h3,.display{font-family:'Archivo',sans-serif}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input{font-family:inherit}
+svg.ic{width:1em;height:1em;vertical-align:-.14em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.eyebrow{font-family:'Archivo';font-stretch:115%;font-size:10.5px;font-weight:700;letter-spacing:.16em;color:var(--red-dark);text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.eyebrow::after{content:'';flex:1;height:1px;background:var(--line)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--sh-sm)}
+.badge{font-size:10.5px;font-weight:700;letter-spacing:.02em;padding:3.5px 10px;border-radius:999px;white-space:nowrap;display:inline-flex;align-items:center;gap:5px;font-family:'Archivo'}
+.b-green{background:var(--green);color:#fff}
+.b-green-soft{background:var(--green-tint);color:var(--green-text)}
+.b-yellow{background:var(--yellow-tint);color:var(--yellow-text)}
+.b-red{background:var(--red);color:#fff}
+.b-gray{background:var(--line-soft);color:var(--muted)}
+.diag{position:absolute;background:var(--green);transform:rotate(24deg);pointer-events:none}
+.diag.y{background:var(--yellow)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.fu{animation:fadeUp .45s cubic-bezier(.2,.7,.3,1) both}
+@media (prefers-reduced-motion:reduce){.fu,.typing i,.pulse{animation:none!important}}
+button:focus-visible,[tabindex]:focus-visible,input:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+.demobar{background:var(--ink);color:#fff;padding:11px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;position:sticky;top:0;z-index:50;box-shadow:0 1px 0 rgba(255,255,255,.06)}
+.demobar .brand{display:flex;align-items:center;gap:10px;font-family:'Archivo';font-stretch:115%;font-weight:800;font-size:15px;letter-spacing:.01em}
+.demobar .brand .m{width:27px;height:27px;border-radius:7px;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:15px;box-shadow:inset 0 -6px 0 rgba(0,0,0,.12)}
+.demobar .sub{font-size:11px;color:#8f8d88;font-weight:500;font-stretch:100%;letter-spacing:0}
+.roleswitch{display:flex;background:#2e2d2b;border-radius:999px;padding:3px;gap:2px}
+.roleswitch button{color:#a6a39d;font-size:12px;font-weight:600;padding:7px 15px;border-radius:999px;transition:all .2s}
+.roleswitch button.on{background:var(--red);color:#fff;box-shadow:0 2px 8px rgba(227,6,19,.4)}
+#view-partner{display:flex;justify-content:center;padding:30px 12px 56px}
+.phone{width:404px;max-width:100%;background:var(--paper);border:9px solid #1b1b1a;border-radius:40px;overflow:hidden;box-shadow:var(--sh-lg),inset 0 0 0 1.5px #3a3937;display:flex;flex-direction:column;min-height:780px;position:relative}
+.notch{position:absolute;top:9px;left:50%;transform:translateX(-50%);width:108px;height:21px;background:#1b1b1a;border-radius:0 0 14px 14px;z-index:40}
+.screen{flex:1;display:none;flex-direction:column;min-height:0}
+.screen.on{display:flex}
+.apphead{background:var(--card);border-bottom:1px solid var(--line);padding:34px 18px 13px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.apphead .ttl{font-family:'Archivo';font-stretch:115%;font-weight:800;font-size:17px;letter-spacing:.005em}
+.logo-m{width:31px;height:31px;border-radius:9px;background:var(--red);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Archivo';font-weight:900;font-size:17px;box-shadow:inset 0 -7px 0 rgba(0,0,0,.12)}
+.bell{position:relative;font-size:19px;color:var(--muted);display:flex}
+.bell .dot{position:absolute;top:-1px;right:-2px;width:8px;height:8px;border-radius:50%;background:var(--red);border:1.5px solid var(--card)}
+.pad{padding:15px 15px 8px}
+.searchbox{display:flex;align-items:center;gap:9px;background:var(--card);border:1px solid var(--line);border-radius:13px;padding:11.5px 14px;color:var(--faint);font-size:13px;box-shadow:var(--sh-sm)}
+.banner{background:linear-gradient(160deg,var(--red) 0%,var(--red-deep) 100%);border-radius:18px;padding:17px;position:relative;overflow:hidden;color:#fff;cursor:pointer;box-shadow:0 10px 26px rgba(227,6,19,.28);transition:transform .2s}
+.banner:hover{transform:translateY(-2px)}
+.banner .k{font-family:'Archivo';font-size:10px;letter-spacing:.16em;opacity:.9;font-weight:700;position:relative}
+.banner .t{font-family:'Archivo';font-stretch:115%;font-weight:800;font-size:20px;line-height:1.2;margin-top:5px;position:relative;letter-spacing:.002em}
+.banner .t em{color:var(--yellow);font-style:normal}
+.banner .s{font-size:12px;opacity:.92;margin-top:10px;position:relative;display:flex;align-items:center;gap:6px;font-weight:500}
+.empcard{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:11px;margin-bottom:11px;cursor:pointer;transition:all .2s;box-shadow:var(--sh-sm)}
+.empcard:hover{border-color:rgba(227,6,19,.45);box-shadow:var(--sh-md);transform:translateY(-1px)}
+.thumb{height:92px;border-radius:12px;position:relative;overflow:hidden;margin-bottom:11px}
+.thumb .sky{position:absolute;inset:0;background-size:cover;background-position:center}
+.thumb .bd{position:absolute;right:-22px;top:-30px;width:64px;height:190px;transform:rotate(24deg);opacity:.92}
+.thumb .badge{position:absolute;top:9px;left:9px;box-shadow:var(--sh-sm)}
+.empcard .body{padding:2px 5px 4px}
+.empcard .name{font-family:'Archivo';font-stretch:112%;font-weight:700;font-size:15.5px}
+.empcard .loc{font-size:12px;color:var(--muted);margin-top:2px;display:flex;align-items:center;gap:5px}
+.empcard .price{font-size:13px;color:var(--red-dark);font-weight:700;margin-top:9px;display:flex;align-items:center;justify-content:space-between}
+.empcard .price span{color:var(--faint);font-weight:500;font-size:12px}
+.rowcard{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:15px;padding:11px 13px;margin-bottom:9px;cursor:pointer;transition:all .2s;box-shadow:var(--sh-sm)}
+.rowcard:hover{border-color:rgba(227,6,19,.45);box-shadow:var(--sh-md)}
+.rowcard .mini{width:46px;height:46px;border-radius:11px;position:relative;overflow:hidden;flex-shrink:0}
+.rowcard .mini .sky{position:absolute;inset:0;background-size:cover;background-position:center}
+.rowcard .mini .bd{position:absolute;right:-14px;top:-16px;width:32px;height:90px;transform:rotate(24deg);opacity:.92}
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:13px}
+.filters .f{font-size:12px;font-weight:600;padding:7px 14px;border-radius:999px;background:var(--card);border:1px solid var(--line);color:var(--muted);transition:all .15s}
+.filters .f.on{background:var(--red);border-color:var(--red);color:#fff;box-shadow:0 3px 10px rgba(227,6,19,.3)}
+.dethero{background:linear-gradient(160deg,var(--red) 0%,var(--red-deep) 100%);color:#fff;padding:38px 18px 18px;position:relative;overflow:hidden}
+.dethero .back{font-size:13px;font-weight:600;opacity:.95;margin-bottom:10px;cursor:pointer;position:relative;display:inline-flex;align-items:center;gap:6px}
+.dethero h2{font-family:'Archivo';font-stretch:118%;font-weight:800;font-size:23px;position:relative;letter-spacing:.002em}
+.dethero .s{font-size:12px;opacity:.92;margin-top:4px;position:relative}
+.dethero .pricechip{position:relative;display:inline-flex;margin-top:11px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);backdrop-filter:blur(4px);border-radius:999px;padding:5px 13px;font-size:12.5px;font-weight:600}
+.dethero .pricechip em{color:var(--yellow);font-style:normal;margin-left:5px;font-weight:700}
+.vigente{border-left:4px solid var(--green);border-radius:4px 16px 16px 4px}
+.matrow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11.5px 0;border-bottom:1px solid var(--line-soft);font-size:13px}
+.matrow:last-child{border-bottom:none}
+.matrow .lbl{display:flex;align-items:center;gap:10px;font-weight:500}
+.matrow .lbl .fic{width:30px;height:30px;border-radius:9px;background:var(--red-soft);color:var(--red-dark);display:flex;align-items:center;justify-content:center;font-size:14px}
+.dl{font-size:12px;font-weight:700;color:var(--red-dark);background:var(--red-tint);border-radius:9px;padding:7px 12px;display:inline-flex;align-items:center;gap:5px;transition:all .2s}
+.dl:hover{background:var(--red);color:#fff}
+.dl.done{color:var(--green-text);background:var(--green-tint)}
+.dl.done:hover{background:var(--green-tint);color:var(--green-text)}
+.btn-wpp{width:100%;padding:13.5px;background:var(--green);color:#fff;border-radius:13px;font-size:14px;font-weight:700;font-family:'Archivo';font-stretch:108%;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 6px 16px rgba(45,140,60,.3);transition:all .2s}
+.btn-wpp:hover{background:var(--green-deep);transform:translateY(-1px)}
+.btn-ghost{width:100%;padding:13px;background:var(--card);color:var(--red-dark);border:1.5px solid var(--red);border-radius:13px;font-size:13.5px;font-weight:700;font-family:'Archivo';font-stretch:108%;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s}
+.btn-ghost:hover{background:var(--red-soft)}
+.btn-red{width:100%;padding:13.5px;background:var(--red);color:#fff;border-radius:13px;font-size:14px;font-weight:700;font-family:'Archivo';font-stretch:108%;box-shadow:0 6px 16px rgba(227,6,19,.3);transition:all .2s}
+.btn-red:hover{background:var(--red-deep);transform:translateY(-1px)}
+.chatwrap{flex:1;display:flex;flex-direction:column;min-height:0}
+.thread{flex:1;overflow-y:auto;padding:15px 15px 4px}
+.msg{display:flex;margin-bottom:10px;align-items:flex-end;gap:7px}
+.msg.user{justify-content:flex-end}
+.msg .av{width:26px;height:26px;border-radius:50%;background:var(--red);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;margin-bottom:2px}
+.msg p{max-width:84%;font-size:13.5px;padding:10px 14px;line-height:1.55;white-space:pre-wrap}
+.msg.user p{background:linear-gradient(160deg,var(--red),var(--red-deep));color:#fff;border-radius:16px 16px 5px 16px;box-shadow:0 3px 10px rgba(227,6,19,.22)}
+.msg.bot p{background:var(--card);border:1px solid var(--line);border-radius:16px 16px 16px 5px;box-shadow:var(--sh-sm)}
+.typing{display:inline-flex;gap:4px;padding:13px 15px;background:var(--card);border:1px solid var(--line);border-radius:16px 16px 16px 5px}
+.typing i{width:6px;height:6px;border-radius:50%;background:var(--faint);animation:blink 1.2s infinite}
+.typing i:nth-child(2){animation-delay:.2s}.typing i:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
+.chips{display:flex;gap:6px;flex-wrap:wrap;padding:7px 15px}
+.chips button{font-size:12px;font-weight:600;padding:7.5px 13px;background:var(--card);border:1px solid var(--line);color:var(--red-dark);border-radius:999px;box-shadow:var(--sh-sm);transition:all .15s}
+.chips button:hover{border-color:var(--red);background:var(--red-soft)}
+.inputbar{display:flex;align-items:center;gap:8px;margin:9px 15px 15px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:5px 5px 5px 17px;box-shadow:var(--sh-md)}
+.inputbar input{flex:1;border:none;outline:none;font-size:13.5px;background:transparent;min-width:0;color:var(--ink)}
+.inputbar button{width:38px;height:38px;border-radius:50%;background:var(--red);color:#fff;font-size:15px;flex-shrink:0;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(227,6,19,.35);transition:all .2s}
+.inputbar button:hover{background:var(--red-deep)}
+.inputbar button:disabled{background:var(--faint);box-shadow:none}
+.statgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:11px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;text-align:center;box-shadow:var(--sh-sm);position:relative;overflow:hidden}
+.stat::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--red)}
+.stat .n{font-family:'Archivo';font-stretch:115%;font-weight:800;font-size:24px;color:var(--red);font-variant-numeric:tabular-nums}
+.stat .l{font-size:11.5px;color:var(--muted);font-weight:500;margin-top:1px}
+.bnav{display:flex;background:var(--card);border-top:1px solid var(--line);padding:6px 6px 10px;position:relative}
+.bnav::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--green) 0 33%,var(--yellow) 33% 40%,var(--red) 40% 100%)}
+.bnav button{flex:1;text-align:center;padding:8px 0 4px;color:var(--faint);font-size:10px;font-weight:600;border-radius:12px;transition:all .15s;position:relative}
+.bnav button .ic2{font-size:19px;display:flex;justify-content:center;margin-bottom:2px}
+.bnav button.on{color:var(--red)}
+.bnav button.on::after{content:'';position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);width:18px;height:3px;border-radius:3px;background:var(--red)}
+.loginscr{flex:1;background:linear-gradient(165deg,var(--red) 0%,var(--red-deep) 100%);position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;padding:30px 24px 30px}
+.loginscr .brandtop{position:absolute;top:46px;left:24px;display:flex;align-items:center;gap:9px;color:#fff;font-family:'Archivo';font-stretch:115%;font-weight:800;font-size:14px;letter-spacing:.05em}
+.loginscr .brandtop .m{width:30px;height:30px;border-radius:8px;background:#fff;color:var(--red);display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:900}
+.loginscr h1{font-family:'Archivo';font-stretch:120%;font-weight:900;font-size:31px;color:#fff;line-height:1.08;position:relative;margin-bottom:8px;letter-spacing:-.005em}
+.loginscr h1 em{color:var(--yellow);font-style:normal}
+.loginscr .sub2{color:#fff;opacity:.92;font-size:13.5px;position:relative;margin-bottom:24px;max-width:30ch;line-height:1.55}
+.loginscr .box{background:var(--card);border-radius:20px;padding:22px;position:relative;box-shadow:0 24px 60px rgba(0,0,0,.3)}
+.fld{margin-bottom:13px}
+.fld label{display:block;font-family:'Archivo';font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--muted);margin-bottom:6px;text-transform:uppercase}
+.fld input{width:100%;border:1.5px solid var(--line);border-radius:11px;padding:11.5px 14px;font-size:14.5px;font-weight:500;transition:border .15s}
+.fld input:focus{outline:none;border-color:var(--red)}
+.loginnote{font-size:11px;color:var(--faint);margin-top:11px;line-height:1.55;display:flex;gap:7px;align-items:flex-start}
+#view-coord{display:none;max-width:1040px;margin:0 auto;padding:28px 18px 64px}
+.cohead{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.cohead h2{font-family:'Archivo';font-stretch:118%;font-weight:800;font-size:23px;display:flex;align-items:center;gap:11px}
+.cohead .s{font-size:12.5px;color:var(--muted);margin-top:2px}
+.metgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:24px}
+.met{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:15px 16px;box-shadow:var(--sh-sm);position:relative;overflow:hidden}
+.met::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--green)}
+.met.k2::before{background:var(--yellow)}
+.met.k3::before{background:var(--ink)}
+.met.alert::before{background:var(--red)}
+.met .l{font-size:12px;color:var(--muted);margin-bottom:5px;font-weight:500}
+.met .n{font-family:'Archivo';font-stretch:115%;font-weight:800;font-size:26px;font-variant-numeric:tabular-nums;line-height:1}
+.met .d{font-size:12px;font-weight:700;color:var(--green-text)}
+.met.alert .l,.met.alert .n{color:var(--red)}
+.prow{display:flex;align-items:center;gap:13px;padding:14px 18px;border-bottom:1px solid var(--line-soft);transition:background .15s;flex-wrap:wrap}
+.prow:hover{background:var(--red-soft)}
+.prow:last-child{border-bottom:none}
+.prow .avx{width:40px;height:40px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0;font-family:'Archivo'}
+.prow .nm{font-weight:600;font-size:14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.prow .ds{font-size:12.5px;color:var(--muted);margin-top:1px}
+.prow .grow{flex:1;min-width:200px}
+.funil{display:flex;align-items:center;gap:4px}
+.funil i{width:9px;height:9px;border-radius:50%;background:var(--line);display:block}
+.funil i.f1{background:var(--faint)}
+.funil i.f2{background:var(--yellow)}
+.funil i.f3{background:var(--red)}
+.callbtn{font-size:12px;font-weight:700;padding:7px 13px;background:var(--red);border:none;color:#fff;border-radius:9px;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;box-shadow:0 3px 10px rgba(227,6,19,.3);transition:all .2s}
+.callbtn:hover{background:var(--red-deep)}
+.cogrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;margin-top:24px}
+.qrow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--line-soft);font-size:13px}
+.qrow:last-child{border-bottom:none}
+.qrow .n{font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums;flex-shrink:0;font-family:'Archivo'}
+.qbar{height:4px;border-radius:4px;background:var(--red-tint);margin-top:5px;overflow:hidden}
+.qbar i{display:block;height:100%;background:var(--red);border-radius:4px}
+.livefeed{max-height:250px;overflow-y:auto}
+.feeditem{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--line-soft);font-size:12.5px}
+.feeditem:last-child{border-bottom:none}
+.feeditem .t{color:var(--faint);flex-shrink:0;font-variant-numeric:tabular-nums;font-weight:600;font-size:11.5px;padding-top:1px}
+.live-pill{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:700;color:var(--green-text);background:var(--green-tint);padding:4px 12px;border-radius:999px;font-family:'Archivo'}
+.live-pill .pulse{width:7px;height:7px;border-radius:50%;background:var(--green);animation:blink 1.4s infinite}
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(6px);background:var(--ink);color:#fff;font-size:13px;font-weight:500;padding:12px 19px;border-radius:999px;opacity:0;pointer-events:none;transition:all .25s;z-index:99;max-width:90vw;text-align:center;box-shadow:0 12px 32px rgba(0,0,0,.3);display:flex;align-items:center;gap:8px}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+#toast .ck{color:#6FCF7E}
+@media (max-width:480px){.phone{min-height:700px;border-width:7px;border-radius:32px}.loginscr h1{font-size:27px}}
+</style>
+</head>
+<body>
+
+<div class="demobar">
+  <div class="brand"><span class="m" id="db-logo"></span><span><span id="db-titulo"></span> <span class="sub">· demo navegável</span></span></div>
+  <div class="roleswitch" role="tablist" aria-label="Alternar visão">
+    <button id="rp" class="on" onclick="setRole('partner')">App do parceiro</button>
+    <button id="rc" onclick="setRole('coord')">Painel do coordenador</button>
+  </div>
+</div>
+
+<div id="view-partner">
+  <div class="phone">
+    <div class="notch"></div>
+
+    <div class="screen on" id="scr-login">
+      <div class="loginscr">
+        <div class="diag" style="right:-58px;top:-70px;width:160px;height:480px;opacity:.95"></div>
+        <div class="diag y" style="right:88px;top:-70px;width:12px;height:480px;opacity:.95"></div>
+        <div class="brandtop"><span class="m" id="lg-logo"></span> <span id="lg-marca"></span></div>
+        <h1 id="lg-titulo"></h1>
+        <p class="sub2" id="lg-sub"></p>
+        <div class="box">
+          <div class="fld"><label for="f-creci">CRECI</label><input id="f-creci" autocomplete="off"></div>
+          <div class="fld"><label for="f-cpf">CPF</label><input id="f-cpf" value="•••.•••.•••-09" autocomplete="off"></div>
+          <button class="btn-red" onclick="doLogin()">Entrar</button>
+          <p class="loginnote" id="loginnote"></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen" id="scr-home">
+      <div class="apphead">
+        <div style="display:flex;align-items:center;gap:10px"><span class="logo-m" id="hd-logo"></span><span class="ttl" id="hd-titulo"></span></div>
+        <span class="bell" id="bell1"><span class="dot"></span></span>
+      </div>
+      <div class="pad" style="flex:1;overflow-y:auto">
+        <p style="margin:0 0 11px 2px;font-size:15px" id="greet"></p>
+        <div class="banner fu" id="banner-home" style="margin-bottom:13px">
+          <div class="diag" style="right:-30px;top:-40px;width:90px;height:220px"></div>
+          <div class="diag y" style="right:52px;top:-40px;width:8px;height:220px"></div>
+          <p class="k" id="cp-k"></p>
+          <p class="t" id="cp-t"></p>
+          <p class="s"><span id="cp-s"></span> <span id="arr1"></span></p>
+        </div>
+        <div class="searchbox" style="margin-bottom:15px"><span id="sic1"></span> Buscar empreendimento...</div>
+        <p class="eyebrow" style="margin:0 0 10px">Em destaque</p>
+        <div id="home-emps"></div>
+      </div>
+      <div class="bnav" id="bnav1"></div>
+    </div>
+
+    <div class="screen" id="scr-imoveis">
+      <div class="apphead"><span class="ttl">Imóveis</span><span class="bell" id="bell2"><span class="dot"></span></span></div>
+      <div class="pad" style="flex:1;overflow-y:auto">
+        <div class="filters" id="filters"></div>
+        <div id="list-emps"></div>
+      </div>
+      <div class="bnav" id="bnav2"></div>
+    </div>
+
+    <div class="screen" id="scr-detail">
+      <div class="dethero">
+        <div class="diag" style="right:-32px;top:-56px;width:100px;height:260px"></div>
+        <div class="diag y" style="right:58px;top:-56px;width:9px;height:260px"></div>
+        <span class="back" onclick="showScreen('scr-imoveis','imoveis')"><span id="backic"></span> Voltar</span>
+        <h2 id="det-name"></h2>
+        <p class="s" id="det-sub"></p>
+        <span class="pricechip" id="det-price"></span>
+      </div>
+      <div class="pad" style="flex:1;overflow-y:auto">
+        <div class="card vigente" style="padding:12px 16px;margin-bottom:15px;display:flex;gap:10px;align-items:flex-start">
+          <span style="color:var(--green-text);font-size:16px;margin-top:1px" id="ckic"></span>
+          <div>
+            <p style="font-size:13px;font-weight:600;color:var(--green-text)"><span id="tv-nome"></span> vigente <span style="color:var(--muted);font-weight:500">· <span id="tv-val"></span></span></p>
+            <p style="font-size:12px;color:var(--muted);margin-top:2px">Você será avisado(a) quando houver atualização</p>
+          </div>
+        </div>
+        <p class="eyebrow" style="margin-bottom:9px">Materiais</p>
+        <div class="card" style="padding:4px 16px;margin-bottom:15px" id="det-mats"></div>
+        <p class="eyebrow" style="margin-bottom:9px">Disponibilidade · resumo</p>
+        <div class="card" style="padding:4px 16px;margin-bottom:15px" id="det-disp"></div>
+        <button class="btn-wpp" onclick="shareKit()" style="margin-bottom:10px"><span id="wic"></span> Compartilhar kit no WhatsApp</button>
+        <button class="btn-ghost" onclick="askAboutCurrent()" style="margin-bottom:18px"><span id="spic"></span> Perguntar ao assistente</button>
+      </div>
+      <div class="bnav" id="bnav3"></div>
+    </div>
+
+    <div class="screen" id="scr-chat">
+      <div class="apphead">
+        <div>
+          <span class="ttl" style="display:flex;align-items:center;gap:8px"><span style="color:var(--red);display:flex" id="spic2"></span> Assistente</span>
+          <p style="font-size:11.5px;color:var(--muted);margin-top:2px">Dúvidas sobre os empreendimentos · 24h</p>
+        </div>
+        <span class="badge b-green-soft">IA online</span>
+      </div>
+      <div class="chatwrap">
+        <div class="thread" id="thread"></div>
+        <div class="chips" id="chips"></div>
+        <div class="inputbar">
+          <input id="chat-in" placeholder="Pergunte sobre um empreendimento..." aria-label="Sua pergunta">
+          <button id="chat-send" onclick="sendFromInput()" aria-label="Enviar"><span id="sendic"></span></button>
+        </div>
+      </div>
+      <div class="bnav" id="bnav4"></div>
+    </div>
+
+    <div class="screen" id="scr-perfil">
+      <div class="apphead"><span class="ttl">Perfil</span></div>
+      <div class="pad" style="flex:1;overflow-y:auto">
+        <div class="card" style="display:flex;align-items:center;gap:13px;padding:15px;margin-bottom:11px">
+          <div style="width:48px;height:48px;border-radius:15px;background:var(--red);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-family:'Archivo';font-size:15px;box-shadow:inset 0 -10px 0 rgba(0,0,0,.1)" id="pf-ini"></div>
+          <div style="flex:1">
+            <p style="font-weight:700;font-size:15px;font-family:'Archivo';font-stretch:110%" id="pf-nome"></p>
+            <p style="font-size:12px;color:var(--muted)" id="pf-sub"></p>
+          </div>
+          <span class="badge b-green-soft"><span id="ckic2" style="display:flex"></span> CRECI ativo</span>
+        </div>
+        <div class="statgrid">
+          <div class="stat"><p class="n" id="st-dl">0</p><p class="l">materiais baixados</p></div>
+          <div class="stat"><p class="n" id="st-q">0</p><p class="l">perguntas ao assistente</p></div>
+        </div>
+        <div class="card" style="padding:4px 16px;margin-bottom:18px" id="perfil-menu"></div>
+      </div>
+      <div class="bnav" id="bnav5"></div>
+    </div>
+
+  </div>
+</div>
+
+<div id="view-coord">
+  <div class="cohead">
+    <div>
+      <h2><span class="logo-m" style="width:34px;height:34px;font-size:18px;border-radius:10px" id="co-logo"></span> Painel de parcerias</h2>
+      <p class="s" id="co-sub"></p>
+    </div>
+    <span class="live-pill"><span class="pulse"></span> <span id="co-live"></span></span>
+  </div>
+  <div class="metgrid">
+    <div class="met fu"><p class="l">Parceiros ativos · 30d</p><p class="n"><span id="m-at"></span> <span class="d" id="m-atd"></span></p></div>
+    <div class="met fu k2" style="animation-delay:.05s"><p class="l">Downloads na semana</p><p class="n" id="m-dl"></p></div>
+    <div class="met fu k3" style="animation-delay:.1s"><p class="l">Perguntas à IA</p><p class="n" id="m-q"></p></div>
+    <div class="met fu alert" style="animation-delay:.15s"><p class="l">Esfriando · 15d sem acesso</p><p class="n" id="m-esf"></p></div>
+  </div>
+  <div style="display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:10px">
+    <p class="eyebrow" style="flex:1;min-width:200px">Esteira de intenção</p>
+    <p style="font-size:12px;color:var(--muted)">explorando → engajado → <strong style="color:var(--red-dark)">fechamento</strong></p>
+  </div>
+  <div class="card" style="overflow:hidden" id="esteira"></div>
+  <div class="cogrid">
+    <div>
+      <p class="eyebrow" style="margin-bottom:10px">Perguntas à IA · 7 dias</p>
+      <div class="card" style="padding:5px 18px" id="qlist"></div>
+      <p class="eyebrow" style="margin:20px 0 10px">Atividade ao vivo</p>
+      <div class="card livefeed" style="padding:5px 18px" id="feed"></div>
+    </div>
+    <div>
+      <p class="eyebrow" style="margin-bottom:10px">Campanha ativa</p>
+      <div class="banner" style="min-height:138px;cursor:default">
+        <div class="diag" style="right:-30px;top:-40px;width:90px;height:240px"></div>
+        <div class="diag y" style="right:52px;top:-40px;width:8px;height:240px"></div>
+        <p class="k" id="cc-k"></p>
+        <p class="t" id="cc-t"></p>
+        <p class="s" id="cc-s"></p>
+      </div>
+      <p class="eyebrow" style="margin:20px 0 10px">Como a esteira funciona</p>
+      <div class="card" style="padding:15px 18px;font-size:13px;color:var(--muted);line-height:1.65">
+        <strong style="color:var(--ink)">Nenhum lead é cadastrado.</strong> A intenção é inferida pelo comportamento: navegar = explorando · baixar material = engajado · perguntar sobre financiamento, ITBI ou unidade específica = <strong style="color:var(--red-dark)">fechamento</strong>.<br><span style="font-size:12px">Teste no app do parceiro e veja esta tela mudar em tempo real.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast" role="status"></div>
+
+<script>
+/* =====================================================================================
+   ███████████████████████████████████████████████████████████████████████████████████
+   ███                                                                             ███
+   ███   DADOS DO APP — EDITE SOMENTE ESTA SEÇÃO                                   ███
+   ███                                                                             ███
+   ███████████████████████████████████████████████████████████████████████████████████
+
+   COMO EDITAR (sem saber programar):
+   1. Abra este arquivo num editor de texto simples (Bloco de Notas, VS Code, TextEdit).
+   2. Altere apenas os textos entre aspas simples ' ' e os números desta seção.
+   3. NÃO apague vírgulas, chaves { }, colchetes [ ] nem aspas — eles são a estrutura.
+   4. Salve e abra o arquivo no navegador pra ver o resultado.
+   5. Dica: edite um campo de cada vez e teste. Se algo quebrar, desfaça (Ctrl+Z).
+
+   PARA ADICIONAR UM EMPREENDIMENTO: copie um bloco inteiro de empreendimento
+   (da linha "id:" até a chave de fechamento "}," ) e cole logo abaixo do último,
+   trocando o id por um nome único sem espaços e sem acentos (ex.: 'jardimnorte').
+===================================================================================== */
+
+/* ---------- 1. MARCA E TEXTOS GERAIS ---------- */
+const MARCA = {
+  nome: 'Metrocasa',                       // nome da incorporadora
+  logoLetra: 'M',                          // letra exibida no quadrado vermelho do logo
+  tituloApp: 'Portal do parceiro',         // nome do app no topo
+  brandTopo: 'METROCASA · PARCEIROS',      // selo no topo da tela de login
+  loginTitulo: 'Vender ficou<br><em>mais fácil.</em>',  // <em> deixa a palavra amarela; <br> quebra linha
+  loginSubtitulo: 'Materiais sempre atualizados, disponibilidade em tempo real e um assistente que responde na hora.',
+  saudacaoAssistente: 'Oi, {nome}! Sou o assistente da Metrocasa. Posso responder sobre preços, plantas, disponibilidade, financiamento e condições de qualquer empreendimento. O que você precisa?'
+};
+
+/* ---------- 2. CORRETOR(A) DE DEMONSTRAÇÃO (quem "usa" o app na demo) ---------- */
+const CORRETOR = {
+  nome: 'Renata',
+  nomeCompleto: 'Renata Campos',
+  iniciais: 'RC',
+  creci: '98.412-SP',
+  imobiliaria: 'Imob. Horizonte',
+  cidade: 'São Paulo'
+};
+
+/* ---------- 3. TABELA DE PREÇOS VIGENTE (selo verde no detalhe do imóvel) ---------- */
+const TABELA_VIGENTE = {
+  nome: 'Tabela jun/26',
+  validade: 'válida até 30/06'
+};
+
+/* ---------- 4. CAMPANHA ATIVA (banner da home e card do painel) ---------- */
+const CAMPANHA = {
+  kicker: 'CAMPANHA DE JUNHO',             // linha pequena em cima do banner
+  titulo: 'Comissão <em>turbinada</em> no Reserva do Parque',  // <em> = palavra amarela
+  subtitulo: 'Válida até 30/06 · ver materiais',
+  abreEmpreendimento: 'reserva',           // id do empreendimento que o banner abre ao tocar
+  painelKicker: 'JUNHO · RESERVA DO PARQUE',
+  painelTitulo: 'Comissão <em>turbinada</em>',
+  painelStats: '87 parceiros visualizaram · 41 baixaram o kit · termina em 19 dias'
+};
+
+/* ---------- 5. EMPREENDIMENTOS ----------
+   Campos de cada empreendimento:
+   id          → identificador único, sem espaços/acentos (usado internamente)
+   nome        → nome comercial
+   etiqueta    → texto do selo + cor: 'b-green' (verde cheio), 'b-yellow' (amarelo),
+                 'b-green-soft' (verde claro), 'b-red' (vermelho), 'b-gray' (cinza)
+   estagio     → usado nos filtros; use exatamente: 'Lançamento', 'Em obras' ou 'Pronto'
+   resumo      → linha que aparece sob o nome (bairro · dorms · metragens · etc.)
+   preco       → texto do preço de chamada
+   foto        → URL de uma foto real (ex.: 'https://site.com/fachada.jpg').
+                 Deixe '' (vazio) para usar a fachada ilustrada nas cores abaixo.
+   cores       → cores da fachada ilustrada quando não há foto (base, barras e diagonal)
+   materiais   → lista dos materiais baixáveis (um por linha, entre aspas, com vírgula)
+   disponibilidade → cada linha é [ 'descrição da planta', 'texto do estoque', 'g' ou 'r' ]
+                 'g' = verde (disponível) · 'r' = vermelho (escasso/últimas unidades)
+   infoIA      → TEXTO LIVRE com TUDO que o assistente de IA pode responder sobre este
+                 empreendimento: preços, plantas, vagas, vista, lazer, entrega, regras.
+                 Quanto mais completo, melhor a IA responde. A IA NUNCA inventa nada
+                 fora do que estiver escrito aqui.
+----------------------------------------------------------------------------- */
+const EMPREENDIMENTOS = {
+
+  reserva: {
+    id: 'reserva',
+    nome: 'Reserva do Parque',
+    etiqueta: ['Lançamento', 'b-green'],
+    estagio: 'Lançamento',
+    resumo: 'Vila Mariana · 2 e 3 dorms · 58–94 m² · 1 a 2 vagas',
+    preco: 'A partir de R$ 689 mil',
+    foto: '',
+    cores: { base:'#DCEEDF', barras:'#C2E0C8', diagonal:'var(--green)' },
+    materiais: [
+      'Book digital',
+      'Tabela de preços jun/26',
+      'Plantas e implantação',
+      'Vídeos e tour 360°'
+    ],
+    disponibilidade: [
+      ['2 dorms · 58 m² · Torre B', '14 unidades', 'g'],
+      ['2 dorms varanda · 64 m² · Torre B', '9 unidades', 'g'],
+      ['3 dorms · 94 m² · Torre A', 'últimas 3', 'r']
+    ],
+    infoIA: 'Reserva do Parque (Vila Mariana, São Paulo). Lançamento. Torres A e B. Plantas: 2 dorms 58m² (1 suíte, 1 vaga, Torre B, 14 unidades disponíveis), 2 dorms com varanda gourmet 64m² (1 vaga, Torre B, 9 disponíveis), 3 dorms 94m² (suíte, 2 vagas, Torre A, últimas 3 unidades). Preços: a partir de R$ 689 mil (2 dorms); 3 dorms a partir de R$ 1,12 milhão. Colunas 3 e 4 da Torre A (finais 03 e 04) têm vista frontal para o parque a partir do 8º andar — 6 unidades disponíveis nessas colunas. Lazer: piscina, academia, coworking, pet place. Entrega prevista: março/2029. Tabela vigente: jun/26, válida até 30/06. Campanha de junho: comissão turbinada de 6% (padrão 4%) para vendas até 30/06.'
+  },
+
+  vista: {
+    id: 'vista',
+    nome: 'Vista Alameda',
+    etiqueta: ['Em obras', 'b-yellow'],
+    estagio: 'Em obras',
+    resumo: 'Moema · 3 e 4 dorms · 105–142 m² · entrega dez/27',
+    preco: 'A partir de R$ 1,12 mi',
+    foto: '',
+    cores: { base:'#F7EDC4', barras:'#EFDF9E', diagonal:'var(--yellow)' },
+    materiais: [
+      'Book digital',
+      'Tabela de preços jun/26',
+      'Plantas',
+      'Andamento da obra · mai/26'
+    ],
+    disponibilidade: [
+      ['3 dorms · 105 m²', '11 unidades', 'g'],
+      ['4 dorms · 142 m² · coluna 04', '5 unidades', 'g']
+    ],
+    infoIA: 'Vista Alameda (Moema, São Paulo). Em obras, 62% concluído, entrega dez/2027. Plantas: 3 dorms 105m² (R$ 1,12 mi, 11 disponíveis) e 4 dorms 142m² (a partir de R$ 1,58 mi, 5 disponíveis, todas na coluna 04 com face norte). ITBI em São Paulo: 3% do valor. Para o 3 dorms de R$ 1,12 mi, ITBI aproximado de R$ 33.600, pago pelo comprador no registro. Tabela vigente: jun/26.'
+  },
+
+  estacao: {
+    id: 'estacao',
+    nome: 'Estação Jardins',
+    etiqueta: ['Pronto pra morar', 'b-green-soft'],
+    estagio: 'Pronto',
+    resumo: 'Bela Vista · 1 e 2 dorms · 32–54 m² · pronto',
+    preco: 'A partir de R$ 512 mil',
+    foto: '',
+    cores: { base:'#F4DDDE', barras:'#EBC4C6', diagonal:'var(--red)' },
+    materiais: [
+      'Book digital',
+      'Tabela de preços jun/26',
+      'Plantas',
+      'Fotos do decorado'
+    ],
+    disponibilidade: [
+      ['1 dorm · 32 m²', '22 unidades', 'g'],
+      ['2 dorms · 54 m²', '8 unidades', 'g']
+    ],
+    infoIA: 'Estação Jardins (Bela Vista, São Paulo). Pronto para morar. Studios/1 dorm 32m² (a partir de R$ 512 mil, 22 disponíveis) e 2 dorms 54m² (a partir de R$ 698 mil, 8 disponíveis). A 350m da estação de metrô. Aceita financiamento bancário imediato (Caixa, Itaú, Bradesco) com ITBI de 3% e registro na entrega das chaves. Ideal para investidores: rentabilidade estimada de aluguel 0,55% a.m.'
+  }
+
+};
+
+/* ---------- 6. CONDIÇÕES GERAIS DE PAGAMENTO (a IA usa em qualquer empreendimento) ---------- */
+const INFO_PAGAMENTO = 'Condições gerais de pagamento Metrocasa: entrada de 20% parcelada em até 36x direto com a incorporadora durante a obra, sem juros; saldo (80%) financiável pela Caixa ou Itaú na entrega das chaves. Para imóveis prontos, financiamento bancário imediato. Simulações devem usar a tabela vigente jun/26.';
+
+/* ---------- 7. PERGUNTAS SUGERIDAS NO CHAT (botões rápidos) ----------
+   Cada linha: [ 'texto curto do botão', 'pergunta completa enviada à IA' ] */
+const CHIPS_ASSISTENTE = [
+  ['Vista pro parque?', 'Tem unidade com vista para o parque no Reserva do Parque?'],
+  ['Financiamento?', 'Quais as condições de financiamento?'],
+  ['ITBI no 3 dorms?', 'Qual o ITBI estimado no 3 dorms do Vista Alameda?']
+];
+
+/* ---------- 8. PAINEL DO COORDENADOR — números base e exemplos ---------- */
+const PAINEL = {
+  subtitulo: 'Coordenação · semana de 8 a 14 jun',
+  parceirosAtivos: '142', parceirosAtivosDelta: '+9%',
+  downloadsSemana: 387,        // número — os downloads da demo somam em cima dele
+  perguntasIA: 96,             // número — as perguntas da demo somam em cima dele
+  esfriando: 18,
+  /* Parceiros de exemplo na esteira (além do corretor da demo, que entra ao vivo).
+     estagio: 1 = Explorando · 2 = Engajado · 3 = Fechamento (mostra botão Ligar) */
+  parceirosExemplo: [
+    { iniciais:'MT', nome:'Marcos T. · Prime Imóveis', descricao:'Vista Alameda · perguntou disponibilidade da coluna 04 duas vezes', estagio:3 },
+    { iniciais:'CL', nome:'Conecta Lar · 4 corretores', descricao:'Baixou tabela e kit de divulgação do Reserva do Parque ontem', estagio:2 },
+    { iniciais:'JS', nome:'João S. · autônomo', descricao:'Aprovado há 2 dias · navegou em 3 empreendimentos', estagio:1 }
+  ],
+  /* Ranking de perguntas à IA na semana: [ 'tema', quantidade ] */
+  perguntasSemana: [
+    ['Financiamento / parcelamento da entrada', 31],
+    ['Metragens e plantas por torre', 24],
+    ['Unidades com vista / andar alto', 17]
+  ],
+  semResposta: ['permuta de terreno', 6],   // [ tema sem resposta na base, quantidade ]
+  /* Eventos antigos no feed de atividade: [ 'hora', 'texto' ] */
+  feedInicial: [
+    ['09:12', 'Conecta Lar baixou o kit de divulgação · Reserva do Parque'],
+    ['08:47', 'Marcos T. perguntou disponibilidade da coluna 04 · Vista Alameda']
+  ]
+};
+
+/* =====================================================================================
+   ███  FIM DOS DADOS — DAQUI PRA BAIXO É O CÓDIGO DO APP (não precisa mexer)  ███
+===================================================================================== */
+
+/* ================= ICONS ================= */
+function ic(n,extra){
+  const P={
+    search:'<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>',
+    bell:'<path d="M6 9a6 6 0 0 1 12 0c0 5 2 6 2 6H4s2-1 2-6"/><path d="M10 19a2 2 0 0 0 4 0"/>',
+    pin:'<path d="M12 21s-7-5.4-7-11a7 7 0 0 1 14 0c0 5.6-7 11-7 11z"/><circle cx="12" cy="10" r="2.6"/>',
+    chevR:'<path d="M9 6l6 6-6 6"/>',
+    arrR:'<path d="M5 12h14M13 6l6 6-6 6"/>',
+    arrL:'<path d="M19 12H5M11 6l-6 6 6 6"/>',
+    dl:'<path d="M12 3v11M7 9.5l5 5 5-5"/><path d="M5 21h14"/>',
+    check:'<path d="M5 13l4 4L19 7"/>',
+    phone:'<path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/>',
+    send:'<path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/>',
+    doc:'<path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6"/>',
+    home:'<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/>',
+    building:'<rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M9 7.5h2M13 7.5h2M9 11.5h2M13 11.5h2M9 15.5h2M13 15.5h2"/>',
+    spark:'<path d="M12 3l1.9 5.6L19.5 10.5l-5.6 1.9L12 18l-1.9-5.6L4.5 10.5l5.6-1.9z"/>',
+    user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>',
+    lock:'<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+    id:'<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="11" r="2"/><path d="M14 9.5h4M14 13h4M5.5 16.5c.6-1.4 1.7-2 3-2s2.4.6 3 2"/>',
+    out:'<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/>',
+    chat:'<path d="M21 11.5a8.5 8.5 0 0 1-12.3 7.6L3 21l1.9-5.7A8.5 8.5 0 1 1 21 11.5z"/>',
+    alert:'<circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5h.01"/>',
+    shield:'<path d="M12 3l8 3v5c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6z"/>'
+  };
+  return '<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"'+(extra?' style="'+extra+'"':'')+'>'+P[n]+'</svg>';
+}
+
+/* ================= STATE ================= */
+const EMPS = EMPREENDIMENTOS;
+const state = { screen:'scr-login', nav:'home', currentEmp:null, downloads:new Set(), questions:0, closingSignals:0, chat:[], feed:[], filter:'Todos' };
+const $ = id => document.getElementById(id);
+function toast(t){ const el=$('toast'); el.innerHTML='<span class="ck">'+ic('check')+'</span>'+t; el.classList.add('on'); clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove('on'),2600); }
+function now(){ const d=new Date(); return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0'); }
+function logEvent(txt){ state.feed.unshift({t:now(),txt}); }
+
+/* ================= NAV ================= */
+const NAVS=[['home','home','Início','scr-home'],['imoveis','building','Imóveis','scr-imoveis'],['chat','spark','Assistente','scr-chat'],['perfil','user','Perfil','scr-perfil']];
+function renderNavs(){
+  document.querySelectorAll('.bnav').forEach(nav=>{
+    nav.innerHTML = NAVS.map(([k,icn,lb,scr])=>
+      '<button class="'+(state.nav===k?'on':'')+'" onclick="showScreen(\''+scr+'\',\''+k+'\')"><span class="ic2">'+ic(icn)+'</span>'+lb+'</button>').join('');
+  });
+}
+function showScreen(id,navKey){
+  state.screen=id; if(navKey) state.nav=navKey;
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
+  $(id).classList.add('on');
+  renderNavs();
+}
+function setRole(r){
+  $('rp').classList.toggle('on',r==='partner');
+  $('rc').classList.toggle('on',r==='coord');
+  $('view-partner').style.display = r==='partner'?'flex':'none';
+  $('view-coord').style.display = r==='coord'?'block':'none';
+  if(r==='coord') renderCoord();
+}
+function doLogin(){
+  showScreen('scr-home','home');
+  toast('CRECI '+CORRETOR.creci+' validado · bem-vinda, '+CORRETOR.nome+'!');
+  logEvent(CORRETOR.nome+' '+CORRETOR.nomeCompleto.split(' ').slice(-1)[0][0]+'. entrou no portal');
+}
+
+/* ================= EMPS ================= */
+function thumbHTML(e,mini){
+  const cls = mini?'mini':'thumb';
+  let sky;
+  if(e.foto){ sky='background-image:url(\''+e.foto+'\')'; }
+  else { sky='background:'+e.cores.base+';background-image:repeating-linear-gradient(90deg,'+e.cores.barras+' 0 '+(mini?'8px':'18px')+',transparent '+(mini?'8px':'18px')+' '+(mini?'14px':'32px')+'),linear-gradient(0deg,rgba(27,27,26,.07),transparent 55%)'; }
+  return '<div class="'+cls+'"><div class="sky" style="'+sky+'"></div><div class="bd" style="background:'+e.cores.diagonal+'"></div>'+(mini?'':'<span class="badge '+e.etiqueta[1]+'">'+e.etiqueta[0]+'</span>')+'</div>';
+}
+function empCard(e){
+  return '<div class="empcard fu" tabindex="0" role="button" onclick="openEmp(\''+e.id+'\')" onkeydown="if(event.key===\'Enter\')openEmp(\''+e.id+'\')">'
+    + thumbHTML(e)
+    + '<div class="body"><p class="name">'+e.nome+'</p>'
+    + '<p class="loc">'+ic('pin')+' '+e.resumo+'</p>'
+    + '<p class="price">'+e.preco+'<span>ver materiais '+ic('chevR')+'</span></p></div></div>';
+}
+function rowCard(e){
+  return '<div class="rowcard fu" tabindex="0" role="button" onclick="openEmp(\''+e.id+'\')" onkeydown="if(event.key===\'Enter\')openEmp(\''+e.id+'\')">'
+    + thumbHTML(e,true)
+    + '<div style="flex:1;min-width:0"><p style="font-family:Archivo;font-stretch:110%;font-weight:700;font-size:14.5px">'+e.nome+'</p>'
+    + '<p style="font-size:12px;color:var(--muted);margin-top:1px">'+e.resumo.split(' · ').slice(0,2).join(' · ')+' · '+e.preco.toLowerCase()+'</p></div>'
+    + '<span class="badge '+e.etiqueta[1]+'">'+e.etiqueta[0]+'</span></div>';
+}
+function renderEmps(){
+  const all=Object.values(EMPS);
+  $('home-emps').innerHTML = all.slice(0,2).map(empCard).join('');
+  const fls=['Todos','Lançamento','Em obras','Pronto'];
+  $('filters').innerHTML = fls.map(f=>'<button class="f '+(state.filter===f?'on':'')+'" onclick="state.filter=\''+f+'\';renderEmps()">'+f+'</button>').join('');
+  $('list-emps').innerHTML = all.filter(e=>state.filter==='Todos'||e.estagio===state.filter).map(rowCard).join('');
+}
+function openEmp(id){
+  const e=EMPS[id]; if(!e) return; state.currentEmp=id;
+  $('det-name').textContent=e.nome;
+  $('det-sub').textContent=e.resumo;
+  $('det-price').innerHTML='A partir de <em>'+e.preco.replace('A partir de ','')+'</em>';
+  $('det-mats').innerHTML = e.materiais.map((m,i)=>{
+    const key=id+'-'+i, done=state.downloads.has(key);
+    return '<div class="matrow"><span class="lbl"><span class="fic">'+ic('doc')+'</span>'+m+'</span><button class="dl '+(done?'done':'')+'" id="dl-'+key+'" onclick="download(\''+id+'\','+i+')">'+(done?ic('check')+' Baixado':ic('dl')+' Baixar')+'</button></div>';
+  }).join('');
+  $('det-disp').innerHTML = e.disponibilidade.map(d=>
+    '<div class="matrow"><span style="font-weight:500">'+d[0]+'</span><strong style="font-family:Archivo;color:'+(d[2]==='r'?'var(--red-dark)':'var(--green-text)')+'">'+d[1]+'</strong></div>').join('');
+  showScreen('scr-detail','imoveis');
+}
+function download(id,i){
+  const key=id+'-'+i;
+  if(state.downloads.has(key)) return;
+  state.downloads.add(key);
+  const btn=$('dl-'+key); btn.innerHTML=ic('check')+' Baixado'; btn.classList.add('done');
+  $('st-dl').textContent=state.downloads.size;
+  toast(EMPS[id].materiais[i]+' baixado');
+  logEvent(CORRETOR.nome+' baixou "'+EMPS[id].materiais[i]+'" · '+EMPS[id].nome);
+}
+function shareKit(){
+  toast('Kit pronto pra compartilhar no WhatsApp');
+  logEvent(CORRETOR.nome+' compartilhou o kit · '+EMPS[state.currentEmp].nome);
+}
+function askAboutCurrent(){
+  showScreen('scr-chat','chat');
+  $('chat-in').value='Sobre o '+EMPS[state.currentEmp].nome+': ';
+  $('chat-in').focus();
+}
+
+/* ================= CHAT (IA real via API da Anthropic) ================= */
+const SYSTEM = 'Você é o assistente do Portal do Parceiro da '+MARCA.nome+', ajudando corretores e imobiliárias parceiras com dúvidas sobre os empreendimentos. Responda SEMPRE em português do Brasil, de forma direta e curta (2 a 4 frases), tom profissional e prestativo, como um colega de plantão de vendas.\n\nUse EXCLUSIVAMENTE as informações da base abaixo. Se a resposta não estiver na base, diga que vai encaminhar a dúvida ao coordenador de parcerias e que ele retorna em breve — nunca invente dados, preços ou condições.\n\nBASE DE CONHECIMENTO:\n'+Object.values(EMPS).map(e=>e.infoIA).join('\n\n')+'\n\n'+INFO_PAGAMENTO;
+
+function addMsg(role,text,skipHistory){
+  if(!skipHistory) state.chat.push({role,content:text});
+  const div=document.createElement('div');
+  div.className='msg '+(role==='user'?'user':'bot');
+  div.innerHTML=(role==='user'?'':'<span class="av">'+ic('spark')+'</span>')+'<p></p>';
+  div.querySelector('p').textContent=text;
+  $('thread').appendChild(div);
+  $('thread').scrollTop=$('thread').scrollHeight;
+}
+function fallbackAnswer(q){
+  const s=q.toLowerCase();
+  if(s.includes('vista')&&s.includes('parque')) return 'Sim! As colunas 3 e 4 da Torre A do Reserva do Parque (finais 03 e 04) têm vista frontal pro parque a partir do 8º andar — 6 unidades disponíveis hoje.';
+  if(s.includes('financ')||s.includes('entrada')) return 'Entrada de 20% parcelada em até 36x direto com a incorporadora durante a obra, sem juros, e o saldo financiável pela Caixa ou Itaú na entrega. Quer que eu simule com o valor de uma unidade?';
+  if(s.includes('itbi')) return 'O ITBI em São Paulo é de 3%. No 3 dorms do Vista Alameda (a partir de R$ 1,12 mi) dá aproximadamente R$ 33.600, pago pelo comprador no registro.';
+  if(s.includes('metragem')||s.includes('planta')) return 'No Reserva do Parque: 2 dorms de 58 m² e 64 m² (com varanda) na Torre B, e 3 dorms de 94 m² na Torre A. Quer as plantas de algum deles?';
+  return 'Essa eu não tenho na base ainda — vou encaminhar pro coordenador de parcerias e ele te retorna em breve. Posso ajudar com preços, plantas, disponibilidade ou condições de pagamento.';
+}
+async function sendMsg(text){
+  if(!text.trim()) return;
+  addMsg('user',text);
+  state.questions++;
+  $('st-q').textContent=state.questions;
+  if(/financ|itbi|entrada|dispon|coluna|unidade|vista|parcel/i.test(text)){ state.closingSignals++; }
+  logEvent(CORRETOR.nome+' perguntou à IA: "'+(text.length>52?text.slice(0,52)+'…':text)+'"');
+  const typing=document.createElement('div');
+  typing.className='msg bot'; typing.innerHTML='<span class="av">'+ic('spark')+'</span><span class="typing"><i></i><i></i><i></i></span>';
+  $('thread').appendChild(typing); $('thread').scrollTop=$('thread').scrollHeight;
+  $('chat-send').disabled=true;
+  let answer;
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens:1000, system:SYSTEM, messages:state.chat.map(m=>({role:m.role,content:m.content})) })
+    });
+    const data=await res.json();
+    answer=(data.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('\n').trim();
+    if(!answer) throw new Error('empty');
+  }catch(e){ answer=fallbackAnswer(text); }
+  typing.remove();
+  addMsg('assistant',answer);
+  $('chat-send').disabled=false;
+}
+function sendFromInput(){ const v=$('chat-in').value; $('chat-in').value=''; sendMsg(v); }
+
+/* ================= COORDENADOR ================= */
+const STAGES={1:{st:'Explorando',cls:'b-gray',av:['var(--line-soft)','var(--muted)']},2:{st:'Engajado',cls:'b-yellow',av:['var(--yellow-tint)','var(--yellow-text)']},3:{st:'Fechamento',cls:'b-red',av:['var(--red-tint)','var(--red-dark)']}};
+function renataStage(){
+  if(state.closingSignals>=2) return 3;
+  if(state.downloads.size>0||state.questions>0) return 2;
+  return 1;
+}
+function funil(n){ return '<span class="funil" title="estágio '+n+' de 3">'+[1,2,3].map(i=>'<i class="'+(i<=n?'f'+n:'')+'"></i>').join('')+'</span>'; }
+function prowHTML(x){
+  const s=STAGES[x.estagio];
+  return '<div class="prow"><div class="avx" style="background:'+s.av[0]+';color:'+s.av[1]+'">'+x.iniciais+'</div>'
+    +'<div class="grow"><p class="nm">'+x.nome+(x.live?' <span class="live-pill" style="font-size:9.5px;padding:2px 9px"><span class="pulse"></span>ao vivo</span>':'')+'</p><p class="ds">'+x.descricao+'</p></div>'
+    +funil(x.estagio)
+    +'<span class="badge '+s.cls+'">'+s.st+'</span>'
+    +(x.estagio===3?'<button class="callbtn" onclick="toast(\'Ligando… (demo)\')">'+ic('phone')+' Ligar</button>':'')
+    +'</div>';
+}
+function renderCoord(){
+  $('m-at').textContent=PAINEL.parceirosAtivos; $('m-atd').textContent=PAINEL.parceirosAtivosDelta;
+  $('m-dl').textContent = PAINEL.downloadsSemana+state.downloads.size;
+  $('m-q').textContent = PAINEL.perguntasIA+state.questions;
+  $('m-esf').textContent = PAINEL.esfriando;
+  const stg=renataStage();
+  const renata={ iniciais:CORRETOR.iniciais, nome:CORRETOR.nome+' '+CORRETOR.nomeCompleto.split(' ').slice(-1)[0][0]+'. · '+CORRETOR.imobiliaria,
+    descricao: state.questions||state.downloads.size ? state.downloads.size+' download(s) · '+state.questions+' pergunta(s) à IA nesta sessão' : 'Acabou de entrar · ainda sem atividade nesta sessão',
+    estagio:stg, live:true };
+  $('esteira').innerHTML = [renata,...PAINEL.parceirosExemplo].map(prowHTML).join('');
+  const qs=PAINEL.perguntasSemana.map((q,i)=>[q[0], q[1]+(i===0?state.closingSignals:0)]);
+  const max=Math.max(...qs.map(q=>q[1]));
+  $('qlist').innerHTML = qs.map(q=>
+    '<div class="qrow"><span style="flex:1"><span style="font-weight:500">'+q[0]+'</span><span class="qbar"><i style="width:'+Math.round(q[1]/max*100)+'%"></i></span></span><span class="n">'+q[1]+'×</span></div>').join('')
+    +'<div class="qrow" style="color:var(--red-dark)"><span style="display:flex;align-items:center;gap:7px;font-weight:600">'+ic('alert')+' Sem resposta: '+PAINEL.semResposta[0]+'</span><span class="n" style="color:var(--red-dark)">'+PAINEL.semResposta[1]+'×</span></div>';
+  const seed=PAINEL.feedInicial.map(f=>({t:f[0],txt:f[1]}));
+  $('feed').innerHTML=[...state.feed,...seed].map(f=>'<div class="feeditem"><span class="t">'+f.t+'</span><span>'+f.txt+'</span></div>').join('');
+}
+
+/* ================= INIT (preenche tudo a partir dos DADOS) ================= */
+$('db-logo').textContent=MARCA.logoLetra; $('db-titulo').textContent=MARCA.tituloApp;
+$('lg-logo').textContent=MARCA.logoLetra; $('lg-marca').textContent=MARCA.brandTopo;
+$('lg-titulo').innerHTML=MARCA.loginTitulo; $('lg-sub').textContent=MARCA.loginSubtitulo;
+$('f-creci').value=CORRETOR.creci;
+$('hd-logo').textContent=MARCA.logoLetra; $('hd-titulo').textContent=MARCA.tituloApp;
+$('greet').innerHTML='Olá, <strong>'+CORRETOR.nome+'</strong> <span style="font-size:12px;color:var(--muted)">· CRECI '+CORRETOR.creci.split('-')[0]+'</span>';
+$('cp-k').textContent=CAMPANHA.kicker; $('cp-t').innerHTML=CAMPANHA.titulo; $('cp-s').textContent=CAMPANHA.subtitulo;
+$('banner-home').addEventListener('click',()=>openEmp(CAMPANHA.abreEmpreendimento));
+$('tv-nome').textContent=TABELA_VIGENTE.nome; $('tv-val').textContent=TABELA_VIGENTE.validade;
+$('pf-ini').textContent=CORRETOR.iniciais; $('pf-nome').textContent=CORRETOR.nomeCompleto;
+$('pf-sub').textContent=CORRETOR.imobiliaria+' · '+CORRETOR.cidade;
+$('co-logo').textContent=MARCA.logoLetra; $('co-sub').textContent=PAINEL.subtitulo;
+$('co-live').textContent='sessão de '+CORRETOR.nome+' '+CORRETOR.nomeCompleto.split(' ').slice(-1)[0][0]+'. ao vivo';
+$('cc-k').textContent=CAMPANHA.painelKicker; $('cc-t').innerHTML=CAMPANHA.painelTitulo; $('cc-s').textContent=CAMPANHA.painelStats;
+$('chips').innerHTML=CHIPS_ASSISTENTE.map((c,i)=>'<button onclick="sendMsg(CHIPS_ASSISTENTE['+i+'][1])">'+c[0]+'</button>').join('');
+$('sic1').innerHTML=ic('search');
+$('arr1').innerHTML=ic('arrR'); $('backic').innerHTML=ic('arrL');
+$('ckic').innerHTML=ic('check'); $('ckic2').innerHTML=ic('check');
+$('wic').innerHTML=ic('chat'); $('spic').innerHTML=ic('spark'); $('spic2').innerHTML=ic('spark');
+$('sendic').innerHTML=ic('send','width:16px;height:16px');
+$('bell1').insertAdjacentHTML('afterbegin',ic('bell')); $('bell2').insertAdjacentHTML('afterbegin',ic('bell'));
+$('loginnote').innerHTML='<span style="color:var(--green-text);margin-top:1px">'+ic('shield')+'</span><span>Seu registro é validado automaticamente no CRECI. Ao entrar, você concorda com a política de privacidade (LGPD).</span>';
+$('perfil-menu').innerHTML=[['bell','Notificações'],['id','Meus dados e CRECI'],['lock','Privacidade (LGPD)']].map(m=>
+  '<div class="matrow"><span class="lbl"><span class="fic" style="background:var(--line-soft);color:var(--muted)">'+ic(m[0])+'</span>'+m[1]+'</span><span style="color:var(--faint)">'+ic('chevR')+'</span></div>').join('')
+  +'<div class="matrow"><span class="lbl" style="color:var(--red-dark)"><span class="fic">'+ic('out')+'</span>Sair</span></div>';
+$('chat-in').addEventListener('keydown',e=>{ if(e.key==='Enter') sendFromInput(); });
+renderNavs(); renderEmps();
+addMsg('assistant',MARCA.saudacaoAssistente.replace('{nome}',CORRETOR.nome),true);
+</script>
+</body>
+</html>
